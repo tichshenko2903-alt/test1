@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Чек-лист по информатике · 7 класс · Linux</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --accent: #06b6d4;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #1e293b;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.05);
+    --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Liberation Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  /* ===== HEADER ===== */
+  .header {
+    position: sticky;
+    top: 0;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    padding: 1rem 2rem;
+  }
+  
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .progress-wrap {
+    flex: 1;
+    max-width: 400px;
+    min-width: 200px;
+  }
+  
+  .progress-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .progress-bar {
+    height: 8px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    width: 0%;
+    transition: width 0.5s ease;
+    border-radius: 4px;
+  }
+  
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 5rem 2rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: drift 60s linear infinite;
+  }
+  
+  @keyframes drift {
+    from { transform: translate(0,0); }
+    to { transform: translate(30px, 30px); }
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  
+  .hero p {
+    font-size: 1.25rem;
+    opacity: 0.95;
+    margin-bottom: 2rem;
+  }
+  
+  .hero-badges {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  
+  .badge {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1.25rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  
+  .btn-start {
+    display: inline-block;
+    background: white;
+    color: var(--primary-dark);
+    padding: 1rem 2.5rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-decoration: none;
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .btn-start:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 25px 30px -5px rgba(0,0,0,0.2);
+  }
+  
+  /* ===== STAGES ===== */
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+  
+  .stage {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .stage:hover {
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .stage-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .stage-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    flex-shrink: 0;
+  }
+  
+  .stage-1 .stage-icon { background: linear-gradient(135deg, #667eea, #764ba2); }
+  .stage-2 .stage-icon { background: linear-gradient(135deg, #f093fb, #f5576c); }
+  .stage-3 .stage-icon { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+  .stage-4 .stage-icon { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+  .stage-5 .stage-icon { background: linear-gradient(135deg, #fa709a, #fee140); }
+  .stage-6 .stage-icon { background: linear-gradient(135deg, #30cfd0, #330867); }
+  
+  .stage-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  
+  .stage-subtitle {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  
+  .checklist {
+    list-style: none;
+  }
+  
+  .checklist li {
+    padding: 0.75rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    border-bottom: 1px dashed var(--border);
+  }
+  
+  .checklist li:last-child { border-bottom: none; }
+  
+  .checklist input[type="checkbox"] {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-top: 2px;
+    position: relative;
+    transition: all 0.2s;
+  }
+  
+  .checklist input[type="checkbox"]:checked {
+    background: var(--success);
+    border-color: var(--success);
+  }
+  
+  .checklist input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  
+  .checklist li.done label {
+    color: var(--text-muted);
+    text-decoration: line-through;
+  }
+  
+  .checklist label {
+    cursor: pointer;
+    flex: 1;
+    transition: color 0.2s;
+  }
+  
+  .checklist label strong {
+    color: var(--primary-dark);
+  }
+  
+  .hotkey {
+    display: inline-block;
+    background: #f1f5f9;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85em;
+    color: var(--text);
+    margin: 0 2px;
+    box-shadow: 0 1px 0 var(--border);
+  }
+  
+  .warning {
+    background: #fef3c7;
+    border-left: 4px solid var(--warning);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+  }
+  
+  .warning::before {
+    content: '⚠️ ';
+  }
+  
+  /* ===== MOCKUP WINDOWS ===== */
+  .mockup {
+    background: #f1f5f9;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin: 1.5rem 0;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  
+  .mockup-titlebar {
+    background: linear-gradient(180deg, #e2e8f0, #cbd5e1);
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .mockup-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #cbd5e1;
+  }
+  .mockup-dot.red { background: #ef4444; }
+  .mockup-dot.yellow { background: #f59e0b; }
+  .mockup-dot.green { background: #10b981; }
+  
+  .mockup-title {
+    flex: 1;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  
+  .mockup-body {
+    padding: 1.5rem;
+    background: white;
+    font-family: 'Liberation Sans', sans-serif;
+    font-size: 0.9rem;
+  }
+  
+  .toolbar {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.5rem;
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .toolbar-select {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    min-width: 80px;
+  }
+  
+  .toolbar-btn {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  .toolbar-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  
+  .dialog {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+  }
+  
+  .dialog-tabs {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .dialog-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    color: var(--text-muted);
+  }
+  
+  .dialog-tab.active {
+    background: var(--primary);
+    color: white;
+  }
+  
+  .dialog-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+  
+  .dialog-row label {
+    min-width: 140px;
+    font-size: 0.85rem;
+  }
+  
+  .dialog-input {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    min-width: 120px;
+  }
+  
+  .dialog-input.highlight {
+    background: #fef3c7;
+    border-color: var(--warning);
+    font-weight: 600;
+  }
+  
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  
+  .radio-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .radio-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: inline-block;
+  }
+  
+  .radio-dot.checked {
+    border-color: var(--primary);
+    background: radial-gradient(circle, var(--primary) 40%, transparent 45%);
+  }
+  
+  .dialog-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  
+  .btn {
+    padding: 0.5rem 1.25rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: white;
+  }
+  
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+  }
+  
+  .annotation {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+  }
+  
+  /* ===== TIPS ===== */
+  .tips {
+    background: linear-gradient(135deg, #ecfeff, #f0f9ff);
+    border: 1px solid #a5f3fc;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .tips h2 {
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  .tip-card {
+    background: white;
+    padding: 1.25rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--accent);
+  }
+  
+  .tip-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+  }
+  
+  .tip-card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+  
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border);
+    background: white;
+  }
+  
+  .footer-emoji {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2rem; }
+    .hero p { font-size: 1rem; }
+    .stage { padding: 1.5rem; }
+    .mockup-body { padding: 1rem; }
+    .dialog-row { flex-direction: column; align-items: flex-start; }
+    .dialog-row label { min-width: auto; }
+  }
+  
+  /* ===== ANIMATIONS ===== */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .stage {
+    animation: fadeInUp 0.6s ease backwards;
+  }
+  
+  .stage:nth-child(1) { animation-delay: 0.1s; }
+  .stage:nth-child(2) { animation-delay: 0.2s; }
+  .stage:nth-child(3) { animation-delay: 0.3s; }
+  .stage:nth-child(4) { animation-delay: 0.4s; }
+  .stage:nth-child(5) { animation-delay: 0.5s; }
+  .stage:nth-child(6) { animation-delay: 0.6s; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-content">
+    <div class="logo">📘 InfoChecklist</div>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span>Прогресс выполнения</span>
+        <span id="progressText">0 / 0</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>📝 Чек-лист по информатике</h1>
+    <p>Пошаговая инструкция для учеников 7 класса по выполнению задания в текстовом редакторе LibreOffice Writer на Linux</p>
+    <div class="hero-badges">
+      <span class="badge">🐧 Linux</span>
+      <span class="badge">📄 LibreOffice Writer</span>
+      <span class="badge">🎯 6 этапов</span>
+      <span class="badge">✅ Интерактивный</span>
+    </div>
+    <a href="#stage1" class="btn-start">🚀 Начать выполнение</a>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- STAGE 1 -->
+  <div class="stage stage-1" id="stage1">
+    <div class="stage-header">
+      <div class="stage-icon">🛠️</div>
+      <div>
+        <div class="stage-title">Этап 1. Подготовка и базовые настройки</div>
+        <div class="stage-subtitle">Открываем редактор и задаём шрифт</div>
+      </div>
+    </div>
+    
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="c1_1">
+        <label for="c1_1">Открой <strong>LibreOffice Writer</strong> в меню приложений</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c1_2">
+        <label for="c1_2">Нажми <span class="hotkey">Ctrl + A</span> чтобы выделить весь текст</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c1_3">
+        <label for="c1_3">В верхней панели выбери размер шрифта <strong>14</strong></label>
+      </li>
+      <li>
+        <input type="checkbox" id="c1_4">
+        <label for="c1_4">Убедись, что начертание — <strong>Обычное</strong> (кнопки Ж, К, Ч не нажаты)</label>
+      </li>
+    </ul>
+    
+    <div class="mockup">
+      <div class="mockup-titlebar">
+        <span class="mockup-dot red"></span>
+        <span class="mockup-dot yellow"></span>
+        <span class="mockup-dot green"></span>
+        <span class="mockup-title">LibreOffice Writer — Без названия</span>
+      </div>
+      <div class="mockup-body">
+        <div class="toolbar">
+          <select class="toolbar-select"><option>Liberation Sans</option></select>
+          <select class="toolbar-select" style="background:#fef3c7;border-color:#f59e0b;font-weight:600;"><option>14</option></select>
+          <button class="toolbar-btn">Ж</button>
+          <button class="toolbar-btn">К</button>
+          <button class="toolbar-btn">Ч</button>
+          <span class="annotation">← Убедись, что кнопки не нажаты</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 2 -->
+  <div class="stage stage-2" id="stage2">
+    <div class="stage-header">
+      <div class="stage-icon">📐</div>
+      <div>
+        <div class="stage-title">Этап 2. Настройка абзаца</div>
+        <div class="stage-subtitle">Отступы, выравнивание и интервалы</div>
+      </div>
+    </div>
+    
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="c2_1">
+        <label for="c2_1">Нажми <span class="hotkey">Ctrl + A</span>, затем правая кнопка мыши → <strong>Абзац...</strong></label>
+      </li>
+      <li>
+        <input type="checkbox" id="c2_2">
+        <label for="c2_2">Вкладка <strong>«Отступы и интервалы»</strong> → Выравнивание: <strong>По ширине</strong></label>
+      </li>
+      <li>
+        <input type="checkbox" id="c2_3">
+        <label for="c2_3">Первая строка: <strong>Отступ = 1,00 см</strong></label>
+      </li>
+      <li>
+        <input type="checkbox" id="c2_4">
+        <label for="c2_4">Межстрочный интервал: <strong>Одинарный</strong> или <strong>Полуторный</strong></label>
+      </li>
+      <li>
+        <input type="checkbox" id="c2_5">
+        <label for="c2_5">Нажми <strong>OK</strong> для применения</label>
+      </li>
+    </ul>
+    
+    <div class="mockup">
+      <div class="mockup-titlebar">
+        <span class="mockup-dot red"></span>
+        <span class="mockup-dot yellow"></span>
+        <span class="mockup-dot green"></span>
+        <span class="mockup-title">Абзац</span>
+      </div>
+      <div class="mockup-body">
+        <div class="dialog">
+          <div class="dialog-tabs">
+            <div class="dialog-tab active">Отступы и интервалы</div>
+            <div class="dialog-tab">Положение на странице</div>
+            <div class="dialog-tab">Сноски</div>
+          </div>
+          
+          <div class="dialog-row">
+            <label>Первая строка:</label>
+            <select class="dialog-input"><option>Отступ</option></select>
+            <input type="text" class="dialog-input highlight" value="1,00 см">
+            <span class="annotation">← ВПИШИ СЮДА!</span>
+          </div>
+          
+          <div class="dialog-row">
+            <label>Межстрочный:</label>
+            <select class="dialog-input"><option>Одинарный</option></select>
+          </div>
+          
+          <div class="dialog-row">
+            <label>Выравнивание:</label>
+            <div class="radio-group">
+              <div class="radio-item"><span class="radio-dot"></span> По левому краю</div>
+              <div class="radio-item"><span class="radio-dot"></span> По центру</div>
+              <div class="radio-item"><span class="radio-dot"></span> По правому краю</div>
+              <div class="radio-item"><span class="radio-dot checked"></span> <strong>По ширине</strong> <span class="annotation">← СЮДА ТОЧКУ!</span></div>
+            </div>
+          </div>
+          
+          <div class="dialog-buttons">
+            <button class="btn">Отмена</button>
+            <button class="btn btn-primary">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 3 -->
+  <div class="stage stage-3" id="stage3">
+    <div class="stage-header">
+      <div class="stage-icon">⌨️</div>
+      <div>
+        <div class="stage-title">Этап 3. Набор и оформление текста</div>
+        <div class="stage-subtitle">Печатаем текст и выделяем слова</div>
+      </div>
+    </div>
+    
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="c3_1">
+        <label for="c3_1">Набери текст из образца. <strong>Не нажимай Enter</strong> в конце каждой строки!</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c3_2">
+        <label for="c3_2">Enter — только между абзацами и перед таблицей</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c3_3">
+        <label for="c3_3">Выдели слова и примени <strong>полужирный</strong>: <span class="hotkey">Ctrl + B</span></label>
+      </li>
+      <li>
+        <input type="checkbox" id="c3_4">
+        <label for="c3_4">Примени <strong>курсив</strong>: <span class="hotkey">Ctrl + I</span></label>
+      </li>
+      <li>
+        <input type="checkbox" id="c3_5">
+        <label for="c3_5">Примени <strong>подчёркивание</strong>: <span class="hotkey">Ctrl + U</span></label>
+      </li>
+    </ul>
+    
+    <div class="warning">
+      Пусть текст переносится на новую строку автоматически. Нажимай <span class="hotkey">Enter</span> только там, где в образце начинается новый абзац.
+    </div>
+  </div>
+
+  <!-- STAGE 4 -->
+  <div class="stage stage-4" id="stage4">
+    <div class="stage-header">
+      <div class="stage-icon">📊</div>
+      <div>
+        <div class="stage-title">Этап 4. Создание и настройка таблицы</div>
+        <div class="stage-subtitle">Вставка, выравнивание и размеры</div>
+      </div>
+    </div>
+    
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="c4_1">
+        <label for="c4_1">Меню: <strong>Вставка → Таблица...</strong> (укажи размеры как в образце)</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c4_2">
+        <label for="c4_2">Заполни ячейки текстом из образца</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c4_3">
+        <label for="c4_3"><strong>1-й столбец</strong> (кроме 1-й строки) → выравнивание <strong>по левому краю</strong></label>
+      </li>
+      <li>
+        <input type="checkbox" id="c4_4">
+        <label for="c4_4"><strong>1-я строка</strong> и <strong>2-й столбец</strong> → выравнивание <strong>по центру</strong></label>
+      </li>
+      <li>
+        <input type="checkbox" id="c4_5">
+        <label for="c4_5">Потяни правую границу таблицы влево — сделай её <strong>уже текста</strong></label>
+      </li>
+      <li>
+        <input type="checkbox" id="c4_6">
+        <label for="c4_6">Правый клик по таблице → <strong>Свойства таблицы</strong> → Выравнивание: <strong>По центру</strong></label>
+      </li>
+    </ul>
+    
+    <div class="mockup">
+      <div class="mockup-titlebar">
+        <span class="mockup-dot red"></span>
+        <span class="mockup-dot yellow"></span>
+        <span class="mockup-dot green"></span>
+        <span class="mockup-title">Свойства таблицы</span>
+      </div>
+      <div class="mockup-body">
+        <div class="dialog">
+          <div class="dialog-tabs">
+            <div class="dialog-tab active">Таблица</div>
+            <div class="dialog-tab">Обтекание</div>
+            <div class="dialog-tab">Столбцы</div>
+            <div class="dialog-tab">Строки</div>
+          </div>
+          
+          <div class="dialog-row">
+            <label>Ширина:</label>
+            <input type="text" class="dialog-input" value="12,00 см">
+            <span class="annotation">← Меньше ширины текста</span>
+          </div>
+          
+          <div class="dialog-row">
+            <label>Выравнивание:</label>
+            <div class="radio-group">
+              <div class="radio-item"><span class="radio-dot"></span> Слева</div>
+              <div class="radio-item"><span class="radio-dot checked"></span> <strong>По центру</strong> <span class="annotation">← СЮДА!</span></div>
+              <div class="radio-item"><span class="radio-dot"></span> Справа</div>
+            </div>
+          </div>
+          
+          <div class="dialog-buttons">
+            <button class="btn">Отмена</button>
+            <button class="btn btn-primary">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 5 -->
+  <div class="stage stage-5" id="stage5">
+    <div class="stage-header">
+      <div class="stage-icon">↕️</div>
+      <div>
+        <div class="stage-title">Этап 5. Интервал между текстом и таблицей</div>
+        <div class="stage-subtitle">От 12 до 24 пунктов</div>
+      </div>
+    </div>
+    
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="c5_1">
+        <label for="c5_1">Поставь курсор в <strong>последнюю строку текста</strong> (перед таблицей)</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c5_2">
+        <label for="c5_2">Правый клик → <strong>Абзац...</strong> → вкладка «Отступы и интервалы»</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c5_3">
+        <label for="c5_3">Раздел «Интервалы» → <strong>Ниже абзаца: 18 пт</strong> (безопасное среднее)</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c5_4">
+        <label for="c5_4">Убедись, что единица измерения — <strong>пункты (пт)</strong>, а не см!</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c5_5">
+        <label for="c5_5">Нажми <strong>OK</strong></label>
+      </li>
+    </ul>
+    
+    <div class="mockup">
+      <div class="mockup-titlebar">
+        <span class="mockup-dot red"></span>
+        <span class="mockup-dot yellow"></span>
+        <span class="mockup-dot green"></span>
+        <span class="mockup-title">Абзац — Интервалы</span>
+      </div>
+      <div class="mockup-body">
+        <div class="dialog">
+          <div class="dialog-row">
+            <label>Выше абзаца:</label>
+            <input type="text" class="dialog-input" value="0,00 см">
+          </div>
+          <div class="dialog-row">
+            <label>Ниже абзаца:</label>
+            <input type="text" class="dialog-input highlight" value="18 пт">
+            <span class="annotation">← ВПИШИ «18 пт»!</span>
+          </div>
+          <div class="dialog-buttons">
+            <button class="btn">Отмена</button>
+            <button class="btn btn-primary">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STAGE 6 -->
+  <div class="stage stage-6" id="stage6">
+    <div class="stage-header">
+      <div class="stage-icon">💾</div>
+      <div>
+        <div class="stage-title">Этап 6. Финальная проверка и сохранение</div>
+        <div class="stage-subtitle">Сохраняем файл в нужном формате</div>
+      </div>
+    </div>
+    
+    <ul class="checklist">
+      <li>
+        <input type="checkbox" id="c6_1">
+        <label for="c6_1">Шрифт <strong>14 пт</strong>, обычный? ✓</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c6_2">
+        <label for="c6_2">Отступ первой строки <strong>1 см</strong>? ✓</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c6_3">
+        <label for="c6_3">Текст выровнен <strong>по ширине</strong>? ✓</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c6_4">
+        <label for="c6_4">Таблица уже текста и выровнена <strong>по центру</strong> страницы? ✓</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c6_5">
+        <label for="c6_5">Все жирные, курсивные и подчёркнутые слова на месте? ✓</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c6_6">
+        <label for="c6_6">Нажми <span class="hotkey">Ctrl + Shift + S</span> (Сохранить как...)</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c6_7">
+        <label for="c6_7">Введи имя файла, которое сообщили организаторы</label>
+      </li>
+      <li>
+        <input type="checkbox" id="c6_8">
+        <label for="c6_8">Выбери формат: <strong>.odt</strong> (рекомендуется) или <strong>.docx</strong> / <strong>.doc</strong></label>
+      </li>
+      <li>
+        <input type="checkbox" id="c6_9">
+        <label for="c6_9">Нажми <strong>Сохранить</strong> и убедись, что файл появился в папке</label>
+      </li>
+    </ul>
+    
+    <div class="mockup">
+      <div class="mockup-titlebar">
+        <span class="mockup-dot red"></span>
+        <span class="mockup-dot yellow"></span>
+        <span class="mockup-dot green"></span>
+        <span class="mockup-title">Сохранить как</span>
+      </div>
+      <div class="mockup-body">
+        <div class="dialog">
+          <div class="dialog-row">
+            <label>Имя файла:</label>
+            <input type="text" class="dialog-input highlight" value="Задание_Иванов" style="min-width:200px;">
+            <span class="annotation">← Имя от организаторов!</span>
+          </div>
+          <div class="dialog-row">
+            <label>Тип файла:</label>
+            <select class="dialog-input" style="min-width:200px;">
+              <option>ODF Text Document (.odt)</option>
+              <option>Word 2007-365 (.docx)</option>
+              <option>Word 97-2003 (.doc)</option>
+            </select>
+          </div>
+          <div class="dialog-buttons">
+            <button class="btn">Отмена</button>
+            <button class="btn btn-primary">Сохранить</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIPS -->
+  <div class="tips">
+    <h2>💡 Полезные советы</h2>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <h3>↩️ Отмена действия</h3>
+        <p>Если случайно нажал не там — нажми <span class="hotkey">Ctrl + Z</span>, чтобы отменить последнее действие.</p>
+      </div>
+      <div class="tip-card">
+        <h3>📏 Точные измерения</h3>
+        <p>Для интервалов в пунктах всегда используй окно «Абзац», а не просто нажимай Enter несколько раз.</p>
+      </div>
+      <div class="tip-card">
+        <h3>🔍 Меню в помощь</h3>
+        <p>Все настройки есть в меню: <strong>Формат → Абзац</strong> и <strong>Формат → Символы</strong>.</p>
+      </div>
+      <div class="tip-card">
+        <h3>🐧 Linux-подсказка</h3>
+        <p>Формат <strong>.odt</strong> — родной для LibreOffice. Сохраняй в нём, если организаторы не требуют иначе.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-emoji">🎓✨</div>
+  <p><strong>Удачи на выполнении задания!</strong></p>
+  <p>Действуй спокойно и отмечай каждый пункт чек-листа.</p>
+  <p style="margin-top:1rem;font-size:0.8rem;">© Информатика · 7 класс · Linux · LibreOffice Writer</p>
+</footer>
+
+<script>
+  // Сохранение прогресса в localStorage
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+  
+  // Загрузка сохранённого состояния
+  checkboxes.forEach((cb, index) => {
+    const saved = localStorage.getItem('check_' + index);
+    if (saved === 'true') {
+      cb.checked = true;
+      cb.parentElement.classList.add('done');
+    }
+    
+    cb.addEventListener('change', () => {
+      localStorage.setItem('check_' + index, cb.checked);
+      if (cb.checked) {
+        cb.parentElement.classList.add('done');
+      } else {
+        cb.parentElement.classList.remove('done');
+      }
+      updateProgress();
+    });
+  });
+  
+  function updateProgress() {
+    const total = checkboxes.length;
+    const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    const percent = (checked / total) * 100;
+    progressFill.style.width = percent + '%';
+    progressText.textContent = checked + ' / ' + total;
+  }
+  
+  updateProgress();
+  
+  // Плавная прокрутка
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
